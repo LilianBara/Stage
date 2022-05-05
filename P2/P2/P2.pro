@@ -1,7 +1,10 @@
-QT += gui core multimedia
+TEMPLATE = app
+QT += gui core multimedia widgets
 
 CONFIG += c++17
 CONFIG -= app_bundle
+
+TARGET = Video
 
 # You can make your code fail to compile if it uses deprecated APIs.
 # In order to do so, uncomment the following line.
@@ -23,10 +26,16 @@ win32 {
 }
 
 SOURCES += \
-        main.cpp
+        classlog.cpp \
+        main.cpp \
+        mainwindow.cpp
 
 DEFINES += OPENCV_DATA_DIR=\\\"/usr/local/share/opencv4/\\\"
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+
+HEADERS += \
+    classlog.h \
+    mainwindow.h
