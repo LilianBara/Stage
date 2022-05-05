@@ -33,7 +33,7 @@ void MainWindow::initUI(){
     stopButton = new QPushButton(this);
     stopButton->setText("Stop");
     stopButton->setStyleSheet("QPushButton { background-color : red; }");
-    button_layout->addWidget(stopButton, 2, 0, 1, 3);
+    button_layout->addWidget(stopButton, 3, 0, 1, 3);
     connect(stopButton, SIGNAL(clicked(bool)), this, SLOT(stopTimer()));
     stopButton->hide();
 
@@ -41,29 +41,36 @@ void MainWindow::initUI(){
     startButton = new QPushButton(this);
     startButton->setText("Start");
     startButton->setStyleSheet("QPushButton { background-color : green; }");
-    button_layout->addWidget(startButton, 1, 0, 1, 3);
+    button_layout->addWidget(startButton, 2, 0, 1, 3);
     connect(startButton, SIGNAL(clicked(bool)), this, SLOT(startTimer()));
 
     //SETTING BUTTON
     settingButton = new QPushButton(this);
     settingButton->setText("⚙");
     settingButton->setStyleSheet("QPushButton { background-color : white; }");
-    button_layout->addWidget(settingButton, 12, 2, 1, 1);
+    button_layout->addWidget(settingButton, 13, 2, 1, 1);
     connect(settingButton, SIGNAL(clicked(bool)), this, SLOT(setting()));
 
-    //CAM BUTTON
+    //MEDIA BUTTON
     mediaButton = new QPushButton(this);
     mediaButton->setText("Média");
     mediaButton->setStyleSheet("QPushButton { background-color : blue; }");
-    button_layout->addWidget(mediaButton, 0, 0, 1, 3);
+    button_layout->addWidget(mediaButton, 1, 0, 1, 3);
     connect(mediaButton, SIGNAL(clicked(bool)), this, SLOT(media()));
 
     //HIDE IMAGE BUTTON
     hideButton = new QPushButton(this);
     hideButton->setText("Cacher image");
     hideButton->setStyleSheet("QPushButton { background-color : white; }");
-    button_layout->addWidget(hideButton, 12, 0, 1, 2);
+    button_layout->addWidget(hideButton, 13, 0, 1, 2);
     connect(hideButton, SIGNAL(clicked(bool)), this, SLOT(hideImage()));
+
+    //MODE BUTTON
+    modeButton = new QPushButton(this);
+    modeButton->setText("Mode");
+    modeButton->setStyleSheet("QPushButton { background-color : cadetblue; }");
+    button_layout->addWidget(modeButton, 0, 0, 1, 3);
+    connect(modeButton, SIGNAL(clicked(bool)), this, SLOT(selectMode()));
 
 
     //SLIDER SENSIVITY
@@ -71,14 +78,14 @@ void MainWindow::initUI(){
     sliderSens->setMinimum(10);
     sliderSens->setMaximum(200);
     sliderSens->setValue(50);
-    button_layout->addWidget(sliderSens, 6, 0 , 1, 3, Qt::Alignment(Qt::AlignHCenter));
+    button_layout->addWidget(sliderSens, 7, 0 , 1, 3, Qt::Alignment(Qt::AlignHCenter));
     connect(sliderSens, SIGNAL(valueChanged(int)), this, SLOT(sensi(int)));
     sliderSens->hide();
 
     //SLIDER SENSIVITY TEXT
     sliderSensText = new QLabel(this);
     sliderSensText->setText("Faire varier sensibilité\n        de détection");
-    button_layout->addWidget(sliderSensText, 4, 0 , 1, 3, Qt::Alignment(Qt::AlignHCenter));
+    button_layout->addWidget(sliderSensText, 5, 0 , 1, 3, Qt::Alignment(Qt::AlignHCenter));
     sliderSensText->hide();
 
     sliderSensMax = new QLabel(this);
@@ -89,13 +96,13 @@ void MainWindow::initUI(){
     font.setBold(true);
 
     sliderSensMax->setFont(font);
-    button_layout->addWidget(sliderSensMax, 5, 0 , 1, 3, Qt::Alignment(Qt::AlignHCenter));
+    button_layout->addWidget(sliderSensMax, 6, 0 , 1, 3, Qt::Alignment(Qt::AlignHCenter));
     sliderSensMax->hide();
 
     sliderSensMin = new QLabel(this);
     sliderSensMin->setText("10p");
     sliderSensMin->setFont(font);
-    button_layout->addWidget(sliderSensMin, 7, 0 , 1, 3, Qt::Alignment(Qt::AlignHCenter));
+    button_layout->addWidget(sliderSensMin, 8, 0 , 1, 3, Qt::Alignment(Qt::AlignHCenter));
     sliderSensMin->hide();
 
     //SLIDER INTERVAL
@@ -103,26 +110,26 @@ void MainWindow::initUI(){
     sliderInterval->setMinimum(1);
     sliderInterval->setMaximum(200);
     sliderInterval->setValue(50);
-    button_layout->addWidget(sliderInterval, 10, 0 , 1, 3, Qt::Alignment(Qt::AlignHCenter));
+    button_layout->addWidget(sliderInterval, 11, 0 , 1, 3, Qt::Alignment(Qt::AlignHCenter));
     connect(sliderInterval, SIGNAL(valueChanged(int)), this, SLOT(timeBetweenImage(int)));
     sliderInterval->hide();
 
     //SLIDER INTERVAL TEXT
     sliderIntervalText = new QLabel(this);
     sliderIntervalText->setText("Faire varier le temps\n    entre les images");
-    button_layout->addWidget(sliderIntervalText, 8, 0 , 1, 3, Qt::Alignment(Qt::AlignHCenter));
+    button_layout->addWidget(sliderIntervalText, 9, 0 , 1, 3, Qt::Alignment(Qt::AlignHCenter));
     sliderIntervalText->hide();
 
     sliderIntervalMax = new QLabel(this);
     sliderIntervalMax->setText("200ms");
     sliderIntervalMax->setFont(font);
-    button_layout->addWidget(sliderIntervalMax, 9, 0 , 1, 3, Qt::Alignment(Qt::AlignHCenter));
+    button_layout->addWidget(sliderIntervalMax, 10, 0 , 1, 3, Qt::Alignment(Qt::AlignHCenter));
     sliderIntervalMax->hide();
 
     sliderIntervalMin = new QLabel(this);
     sliderIntervalMin->setText("1ms");
     sliderIntervalMin->setFont(font);
-    button_layout->addWidget(sliderIntervalMin, 11, 0 , 1, 3, Qt::Alignment(Qt::AlignHCenter));
+    button_layout->addWidget(sliderIntervalMin, 12, 0 , 1, 3, Qt::Alignment(Qt::AlignHCenter));
     sliderIntervalMin->hide();
 
 
@@ -136,12 +143,12 @@ void MainWindow::initUI(){
 }
 
 void MainWindow::media(){
+    if(timerActive)
+        return;
+
     QList<QCameraInfo> cameras = QCameraInfo::availableCameras();
     QString info = QString("Cameras disponibles: \n");
     cameraMenu = new QMenu(this);
-
-    if(timerActive)
-        return;
 
     foreach (const QCameraInfo &cameraInfo, cameras){
         int i = 0;
@@ -175,8 +182,30 @@ void MainWindow::media(){
     cameraMenu->addAction(camera[4]);
     connect(camera[4], SIGNAL(triggered(bool)), this, SLOT(openVideo()));
 
-    QPoint positionCamButton = QCursor::pos();
-    cameraMenu->popup(positionCamButton);
+    QPoint cursorPosition = QCursor::pos();
+    cameraMenu->popup(cursorPosition);
+}
+
+void MainWindow::selectMode(){
+    if(timerActive)
+        return;
+
+    modeMenu = new QMenu(this);
+
+    mode[0] = new QAction(" - Détection visage, âge et genre", cameraMenu);
+    modeMenu->addAction(mode[0]);
+    connect(mode[0], SIGNAL(triggered(bool)), this, SLOT(setModeVisage()));
+
+    mode[1] = new QAction(" - Détection objets", cameraMenu);
+    modeMenu->addAction(mode[1]);
+    connect(mode[1], SIGNAL(triggered(bool)), this, SLOT(setModeObjet()));
+
+    mode[2] = new QAction(" - Comptage personnes", cameraMenu);
+    modeMenu->addAction(mode[2]);
+    connect(mode[2], SIGNAL(triggered(bool)), this, SLOT(setModeComptage()));
+
+    QPoint cursorPosition = QCursor::pos();
+    modeMenu->popup(cursorPosition);
 }
 
 void MainWindow::openCam0(){
@@ -207,13 +236,34 @@ void MainWindow::openVideo(){
     photo = false;
 }
 
+void MainWindow::setModeVisage(){
+    modeSelected = 0;
+}
+
+void MainWindow::setModeObjet(){
+    modeSelected = 1;
+}
+
+void MainWindow::setModeComptage(){
+    comptage = true;
+}
+
 
 void MainWindow::startTimer(){
     if(!cap.isOpened())
         return;
 
     timerCamera = new QTimer(this);
-    connect(timerCamera, SIGNAL(timeout()), this, SLOT(faceResearch()));
+
+    if(modeSelected == 0){
+        connect(timerCamera, SIGNAL(timeout()), this, SLOT(faceResearch()));
+        disconnect(timerCamera, SIGNAL(timeout()), this, SLOT(objectResearch()));
+    }
+    if(modeSelected == 1){
+        connect(timerCamera, SIGNAL(timeout()), this, SLOT(objectResearch()));
+        disconnect(timerCamera, SIGNAL(timeout()), this, SLOT(faceResearch()));
+    }
+
     timerCamera->setInterval(frameInterval);
 
     if(photo){
@@ -450,6 +500,121 @@ void MainWindow::imageTreatment(vector<int> actualBox, Mat image){
 
     emit newLabel();
     emit elapsedTime();
+}
+
+void MainWindow::objectResearch(){
+    if (!photo)
+        cap.read(image);
+
+    if(resizeWindow){
+        int width = image.cols *1.34;
+        int height = image.rows*1.325;
+
+        QSize size = qApp->screens()[0]->size();
+
+        if(width>size.width())
+            width = size.width();
+
+        if(height>size.height())
+                height = size.height();
+
+        this->resize(width,height);
+        resizeWindow = false;
+    }
+
+    int inputWidth = 416;
+    int inputHeight = 416;
+
+    int treatmentStarted = cv::getTickCount();
+
+    ifstream ifs(objectNamesFile.c_str());
+    while(getline(ifs, objectName))
+        objectClasses.push_back(objectName);
+
+    cv::Mat blob;
+    cv::dnn::blobFromImage(image, blob, 1 / 255.0, cv::Size(inputWidth, inputHeight), cv::Scalar(0, 0, 0), true, false);
+
+    objectNet.setInput(blob);
+
+    // forward
+    static vector<string> names;
+    vector<int> outLayers = objectNet.getUnconnectedOutLayers();
+    vector<string> layersNames = objectNet.getLayerNames();
+    names.resize(outLayers.size());
+
+    for (size_t i = 0; i < outLayers.size(); ++i)
+        names[i] = layersNames[outLayers[i] - 1];
+
+    vector<cv::Mat> outs;
+    objectNet.forward(outs, names);
+
+    // remove the bounding boxes with low confidence
+    vector<int> outClassIds;
+    vector<float> outConfidences;
+    vector<cv::Rect> outBoxes;
+
+    float confThreshold = 0.5; // confidence threshold
+    float nmsThreshold = 0.4;  // non-maximum suppression threshold
+
+    vector<int> classIds;
+    vector<float> confidences;
+    vector<cv::Rect> boxes;
+
+    for (size_t i = 0; i < outs.size(); ++i) {
+        float* data = (float*)outs[i].data;
+        for (int j = 0; j < outs[i].rows; ++j, data += outs[i].cols)
+        {
+            cv::Mat scores = outs[i].row(j).colRange(5, outs[i].cols);
+            cv::Point classIdPoint;
+            double confidence;
+            // get the value and location of the maximum score
+            cv::minMaxLoc(scores, 0, &confidence, 0, &classIdPoint);
+            if (confidence > confThreshold)
+            {
+                int centerX = (int)(data[0] * image.cols);
+                int centerY = (int)(data[1] * image.rows);
+                int width = (int)(data[2] * image.cols);
+                int height = (int)(data[3] * image.rows);
+                int left = centerX - width / 2;
+                int top = centerY - height / 2;
+
+                classIds.push_back(classIdPoint.x);
+                confidences.push_back((float)confidence);
+                boxes.push_back(cv::Rect(left, top, width, height));
+            }
+        }
+    }
+
+    // non maximum suppression
+    vector<int> indices;
+    cv::dnn::NMSBoxes(boxes, confidences, confThreshold, nmsThreshold, indices);
+    for (size_t i = 0; i < indices.size(); ++i) {
+        int idx = indices[i];
+        outClassIds.push_back(classIds[idx]);
+        outBoxes.push_back(boxes[idx]);
+        outConfidences.push_back(confidences[idx]);
+    }
+
+    for(size_t i = 0; i < outClassIds.size(); i ++) {
+        cv::rectangle(image, outBoxes[i], cv::Scalar(0, 0, 255));
+
+        // get the label for the class name and its confidence
+        string label = objectClasses[outClassIds[i]];
+        label += cv::format(":%.2f", outConfidences[i]);
+
+        // display the label at the top of the bounding box
+        int baseLine;
+        cv::Size labelSize = cv::getTextSize(label, cv::FONT_HERSHEY_SIMPLEX, 0.5, 1, &baseLine);
+        int left = outBoxes[i].x, top = outBoxes[i].y;
+        top = max(top, labelSize.height);
+        cv::putText(image, label, cv::Point(left, top), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(255,255,255));
+    }
+    int treatmentEnded = cv::getTickCount();
+    double treatmentTime = (treatmentEnded-treatmentStarted) /cv::getTickFrequency();
+    treatmentText = "Temps de traitement : " + to_string(treatmentTime) + " s";
+
+    emit elapsedTime();
+    emit newFrame(&image);
 }
 
 

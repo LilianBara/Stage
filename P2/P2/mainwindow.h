@@ -70,6 +70,12 @@ private slots:
     void openCam2();
     void setting();
     void hideImage();
+    void selectMode();
+    void setModeObjet();
+    void setModeVisage();
+    void setModeComptage();
+    void objectResearch();
+
 
 private :
     bool debugActif = false;
@@ -79,6 +85,7 @@ private :
     bool resizeWindow = true;
     bool imageHided = false;
     bool timerActive = false;
+    bool comptage = false;
 
     vector<string> labels;
 
@@ -90,9 +97,11 @@ private :
     int labelCount =0;
     int sensivity = 50;
     int frameInterval = 50;
+    int modeSelected = -1;
 
     vector<Mat> facesFrame;
     vector<vector<int>> elderBoxOfBox;
+    vector<string> objectClasses;
 
     VideoCapture cap;
 
@@ -107,6 +116,7 @@ private :
     QPushButton *mediaButton;
     QPushButton *settingButton;
     QPushButton *hideButton;
+    QPushButton *modeButton;
 
     QSlider *sliderSens;
     QSlider *sliderInterval;
@@ -125,12 +135,17 @@ private :
 
     QMouseEvent *event;
     QMenu *cameraMenu;
+    QMenu *modeMenu;
     QAction *camera[5];
-    QPoint *positionCamButton;
+    QAction *mode[3];
+    QPoint *cursorPosition;
 
-
-
-
+    // OBJECT DETECTION
+    cv::dnn::Net objectNet = cv::dnn::readNet("/home/digital/Documents/GitHub/Stage/P2/yolov3/yolov3.weights",
+                             "/home/digital/Documents/GitHub/Stage/P2/yolov3/yolov3.cfg",
+                             "Darknet");
+    string objectName;
+    string objectNamesFile = "/home/digital/Documents/GitHub/Stage/P2/yolov3/coco.names";
 
     // FACE DETECTION
     cv::dnn::Net net = cv::dnn::readNet("/home/digital/Documents/GitHub/Stage/P2/face_detection/res10_300x300_ssd_iter_140000.caffemodel",

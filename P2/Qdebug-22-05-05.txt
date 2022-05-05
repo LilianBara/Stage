@@ -485,3 +485,41 @@
  [ti] 12:40:36 [ui] Debug: 64 249 158 158
  [ti] 12:40:46 [ui] Debug: 27 216 150 150
  [ti] 14:06:49 [ui] Debug: 259 222 178 178
+ [ti] 14:45:51 [ui] Debug: 244 210 199 199
+ [ti] 14:46:00 [ui] Debug: 220 270 147 147
+ [ti] 14:46:14 [ui] Debug: 217 213 193 193
+ [ti] 14:49:46 [ui] Warning: QObject::connect: No such slot MainWindow::mode() in ../P2/mainwindow.cpp:73
+ [ti] 14:50:08 [ui] Warning: QObject::connect: No such slot MainWindow::mode() in ../P2/mainwindow.cpp:73
+ [ti] 14:50:43 [ui] Warning: QObject::connect: No such slot MainWindow::mode() in ../P2/mainwindow.cpp:73
+ [ti] 14:57:51 [ui] Warning: QObject::connect: No such slot MainWindow::mode() in ../P2/mainwindow.cpp:73
+ [ti] 14:58:36 [ui] Warning: QObject::connect: No such slot MainWindow::mode() in ../P2/mainwindow.cpp:73
+ [ti] 15:16:11 [ui] Warning: QObject::disconnect: No such slot MainWindow::objectResearch() in ../P2/mainwindow.cpp:260
+ [ti] 15:16:12 [ui] Debug: 211 193 252 252
+ [ti] 15:16:18 [ui] Warning: QObject::connect: No such slot MainWindow::objectResearch() in ../P2/mainwindow.cpp:263
+ [ti] 15:16:21 [ui] Warning: QObject::disconnect: No such slot MainWindow::objectResearch() in ../P2/mainwindow.cpp:260
+ [ti] 16:53:52 [ui] Debug: 257 242 182 182
+ [ti] 16:55:43 [ui] Debug: 248 247 177 177
+ [ti] 16:57:01 [ui] Debug: 381 123 102 102
+ [ti] 16:57:01 [ui] Debug: 198 130 90 90
+ [ti] 16:57:02 [ui] Debug: 258 80 129 129
+ [ti] 16:58:02 [ui] Debug: 258 256 171 171
+ [ti] 16:58:24 [ui] Debug: 306 244 180 180
+ [ti] 16:58:26 [ui] Debug: 247 231 196 196
+ [ti] 16:58:27 [ui] Debug: 201 230 188 188
+ [ti] 16:59:24 [ui] Debug: 203 143 184 184
+ [ti] 16:59:28 [ui] Debug: 259 153 176 176
+ [ti] 16:59:30 [ui] Debug: 208 159 169 169
+ [ti] 17:00:51 [ui] Debug: 173 215 166 166
+ [ti] 17:03:20 [ui] Debug: 231 185 157 157
+ [ti] 17:09:48 [ui] Debug: 268 209 153 153
+ [ti] 17:10:34 [ui] Debug: 222 199 158 158
+ [ti] 17:14:07 [ui] Debug: 228 256 133 133
+ [ti] 17:16:02 [ui] Debug: 235 194 193 193
+ [ti] 17:16:03 [ui] Debug: 297 229 165 165
+ [ti] 17:24:52 [ui] Debug: 381 123 102 102
+ [ti] 17:24:52 [ui] Debug: 197 130 90 90
+ [ti] 17:24:52 [ui] Debug: 259 81 127 127
+ [ti] 17:29:22 [ui] Debug: 367 163 243 243
+ [ti] 17:29:29 [ui] Debug: 331 141 181 181
+ [ti] 17:29:29 [ui] Debug: 283 142 156 156
+ [ti] 17:29:32 [ui] Debug: 221 140 183 183
