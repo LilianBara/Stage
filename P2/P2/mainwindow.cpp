@@ -13,6 +13,7 @@ MainWindow::~MainWindow()
 {
 }
 
+//INIT
 void MainWindow::initUI(){
     //LAYOUT
     QGridLayout *image_layout = new QGridLayout();
@@ -28,6 +29,13 @@ void MainWindow::initUI(){
     image_layout->setContentsMargins(0,0,0,0);
     image_layout->addWidget(imageView);
     connect(this, &MainWindow::newFrame, this,&MainWindow::uploadImage);
+
+    //MENU
+    cameraMenu = new QMenu(this);
+    modeMenu = new QMenu(this);
+
+    //TIMER
+    timerCamera = new QTimer(this);
 
     //STOP BUTTON
     stopButton = new QPushButton(this);
@@ -48,7 +56,7 @@ void MainWindow::initUI(){
     settingButton = new QPushButton(this);
     settingButton->setText("⚙");
     settingButton->setStyleSheet("QPushButton { background-color : white; }");
-    button_layout->addWidget(settingButton, 13, 2, 1, 1);
+    button_layout->addWidget(settingButton, 18, 2, 1, 1);
     connect(settingButton, SIGNAL(clicked(bool)), this, SLOT(setting()));
 
     //MEDIA BUTTON
@@ -56,13 +64,13 @@ void MainWindow::initUI(){
     mediaButton->setText("Média");
     mediaButton->setStyleSheet("QPushButton { background-color : blue; }");
     button_layout->addWidget(mediaButton, 1, 0, 1, 3);
-    connect(mediaButton, SIGNAL(clicked(bool)), this, SLOT(media()));
+    connect(mediaButton, SIGNAL(clicked(bool)), this, SLOT(selectMedia()));
 
     //HIDE IMAGE BUTTON
     hideButton = new QPushButton(this);
     hideButton->setText("Cacher image");
     hideButton->setStyleSheet("QPushButton { background-color : white; }");
-    button_layout->addWidget(hideButton, 13, 0, 1, 2);
+    button_layout->addWidget(hideButton, 18, 0, 1, 2);
     connect(hideButton, SIGNAL(clicked(bool)), this, SLOT(hideImage()));
 
     //MODE BUTTON
@@ -134,93 +142,108 @@ void MainWindow::initUI(){
 
 
     //LABEL
+    labelTime = new QLabel(this);
+    labelText = new QLabel(this);
+    countText = new QLabel(this);
     connect(this, &MainWindow::newLabel, this,&MainWindow::uploadListLabel);
     connect(this, &MainWindow::elapsedTime, this,&MainWindow::uploadTimeLabel);
+
+    //CHECKBOX OBJECT DETECTION
+    objectToDetect = new QCheckBox(this);
+    objectToDetect->hide();
+    button_layout->addWidget(objectToDetect, 15, 0 , 1, 3, Qt::Alignment(Qt::AlignHCenter));
+
+    //CHECKBOX LABEL
+    objectToDetectText= new QLabel(this);
+    objectToDetectText->setText("Personnes seulement");
+    button_layout->addWidget(objectToDetectText, 14, 0 , 1, 3, Qt::Alignment(Qt::AlignHCenter));
+    objectToDetectText->hide();
+
+    //CHECKBOX OBJECT DETECTION
+    countMode = new QCheckBox(this);
+    countMode->hide();
+    button_layout->addWidget(countMode, 17, 0 , 1, 3, Qt::Alignment(Qt::AlignHCenter));
+
+    //CHECKBOX LABEL
+    countModeText= new QLabel(this);
+    countModeText->setText("Mode compteur");
+    button_layout->addWidget(countModeText, 16, 0 , 1, 3, Qt::Alignment(Qt::AlignHCenter));
+    countModeText->hide();
 
     QWidget *imageWidget = new QWidget();
     imageWidget->setLayout(main_layout);
     setCentralWidget(imageWidget);
 }
 
-void MainWindow::media(){
+
+//SELECT MEDIA
+void MainWindow::selectMedia(){
     if(timerActive)
         return;
 
-    QList<QCameraInfo> cameras = QCameraInfo::availableCameras();
-    QString info = QString("Cameras disponibles: \n");
-    cameraMenu = new QMenu(this);
+    if(!mediaMenuSet){
+        QList<QCameraInfo> cameras = QCameraInfo::availableCameras();
+        QString info = QString("Cameras disponibles: \n");
 
-    foreach (const QCameraInfo &cameraInfo, cameras){
-        int i = 0;
-        info = cameraInfo.deviceName();
-        String device = info.toStdString();
-        char ID = device.at(device.length() - 1);
+        foreach (const QCameraInfo &cameraInfo, cameras){
+            int i = 0;
+            info = cameraInfo.deviceName();
+            String device = info.toStdString();
+            char ID = device.at(device.length() - 1);
 
-        info = " - " + cameraInfo.description();
-        camera[i] = new QAction(info, cameraMenu);
-        cameraMenu->addAction(camera[i]);
+            info = " - " + cameraInfo.description();
+            camera[i] = new QAction(info, cameraMenu);
+            cameraMenu->addAction(camera[i]);
 
-        if(ID == '0'){
-            connect(camera[i], SIGNAL(triggered(bool)), this, SLOT(openCam0()));
+            if(ID == '0'){
+                connect(camera[i], SIGNAL(triggered(bool)), this, SLOT(openCam0()));
+            }
+
+            if(ID == '1'){
+                connect(camera[i], SIGNAL(triggered(bool)), this, SLOT(openCam1()));
+            }
+
+            if(ID == '2'){
+                connect(camera[i], SIGNAL(triggered(bool)), this, SLOT(openCam2()));
+            }
+            i++;
         }
 
-        if(ID == '1'){
-            connect(camera[i], SIGNAL(triggered(bool)), this, SLOT(openCam1()));
-        }
+        camera[3] = new QAction(" - Photo", cameraMenu);
+        cameraMenu->addAction(camera[3]);
+        connect(camera[3], SIGNAL(triggered(bool)), this, SLOT(openPhoto()));
 
-        if(ID == '2'){
-            connect(camera[i], SIGNAL(triggered(bool)), this, SLOT(openCam2()));
-        }
-        i++;
+        camera[4] = new QAction(" - Vidéo", cameraMenu);
+        cameraMenu->addAction(camera[4]);
+        connect(camera[4], SIGNAL(triggered(bool)), this, SLOT(openVideo()));
+
+        mediaMenuSet = true;
     }
-
-    camera[3] = new QAction(" - Photo", cameraMenu);
-    cameraMenu->addAction(camera[3]);
-    connect(camera[3], SIGNAL(triggered(bool)), this, SLOT(openPhoto()));
-
-    camera[4] = new QAction(" - Vidéo", cameraMenu);
-    cameraMenu->addAction(camera[4]);
-    connect(camera[4], SIGNAL(triggered(bool)), this, SLOT(openVideo()));
 
     QPoint cursorPosition = QCursor::pos();
     cameraMenu->popup(cursorPosition);
 }
 
-void MainWindow::selectMode(){
-    if(timerActive)
-        return;
-
-    modeMenu = new QMenu(this);
-
-    mode[0] = new QAction(" - Détection visage, âge et genre", cameraMenu);
-    modeMenu->addAction(mode[0]);
-    connect(mode[0], SIGNAL(triggered(bool)), this, SLOT(setModeVisage()));
-
-    mode[1] = new QAction(" - Détection objets", cameraMenu);
-    modeMenu->addAction(mode[1]);
-    connect(mode[1], SIGNAL(triggered(bool)), this, SLOT(setModeObjet()));
-
-    mode[2] = new QAction(" - Comptage personnes", cameraMenu);
-    modeMenu->addAction(mode[2]);
-    connect(mode[2], SIGNAL(triggered(bool)), this, SLOT(setModeComptage()));
-
-    QPoint cursorPosition = QCursor::pos();
-    modeMenu->popup(cursorPosition);
-}
-
+//OPEN MEDIA
 void MainWindow::openCam0(){
     cap.open(0);
     photo = false;
+    if(settings)
+        settingButton->animateClick();
 }
 
 void MainWindow::openCam1(){
     cap.open(1);
     photo = false;
+    if(settings)
+        settingButton->animateClick();
 }
 
 void MainWindow::openCam2(){
     cap.open(2);
     photo = false;
+    if(settings)
+        settingButton->animateClick();
 }
 
 void MainWindow::openPhoto(){
@@ -228,6 +251,8 @@ void MainWindow::openPhoto(){
     cap.open(fileName);
     cap.read(image);
     photo = true;
+    if(settings)
+        settingButton->animateClick();
 }
 
 void MainWindow::openVideo(){
@@ -236,35 +261,54 @@ void MainWindow::openVideo(){
     photo = false;
 }
 
-void MainWindow::setModeVisage(){
+
+//SELECT MODE
+void MainWindow::selectMode(){
+    if(timerActive)
+        return;
+
+    if(!modeMenuSet){
+        mode[0] = new QAction(" - Détection visage, âge et genre", cameraMenu);
+        modeMenu->addAction(mode[0]);
+        connect(mode[0], SIGNAL(triggered(bool)), this, SLOT(setFaceMode()));
+
+        mode[1] = new QAction(" - Détection objets", cameraMenu);
+        modeMenu->addAction(mode[1]);
+        connect(mode[1], SIGNAL(triggered(bool)), this, SLOT(setObjectMode()));
+        modeMenuSet = true;
+    }
+
+    QPoint cursorPosition = QCursor::pos();
+    modeMenu->popup(cursorPosition);
+}
+
+//SET MODE
+void MainWindow::setFaceMode(){
     modeSelected = 0;
+    if(settings)
+        settingButton->animateClick();
 }
 
-void MainWindow::setModeObjet(){
+void MainWindow::setObjectMode(){
     modeSelected = 1;
+    if(settings)
+        settingButton->animateClick();
 }
 
-void MainWindow::setModeComptage(){
-    comptage = true;
+void MainWindow::checkCountMode(){
+    if(countMode->isChecked())
+        comptage = true;
+    else{
+        comptage = false;
+        compteur = 0;
+        tempObjectBox.clear();
+    }
 }
 
-
+//TIMER
 void MainWindow::startTimer(){
     if(!cap.isOpened())
         return;
-
-    timerCamera = new QTimer(this);
-
-    if(modeSelected == 0){
-        connect(timerCamera, SIGNAL(timeout()), this, SLOT(faceResearch()));
-        disconnect(timerCamera, SIGNAL(timeout()), this, SLOT(objectResearch()));
-    }
-    if(modeSelected == 1){
-        connect(timerCamera, SIGNAL(timeout()), this, SLOT(objectResearch()));
-        disconnect(timerCamera, SIGNAL(timeout()), this, SLOT(faceResearch()));
-    }
-
-    timerCamera->setInterval(frameInterval);
 
     if(photo){
         timerCamera->setSingleShot(true);
@@ -274,6 +318,19 @@ void MainWindow::startTimer(){
         timerCamera->setSingleShot(false);
         settingButton->show();
     }
+
+    if(modeSelected == 0){
+        disconnect(timerCamera, SIGNAL(timeout()), this, SLOT(objectResearch()));
+        connect(timerCamera, SIGNAL(timeout()), this, SLOT(faceResearch()));
+    }
+    if(modeSelected == 1){
+        disconnect(timerCamera, SIGNAL(timeout()), this, SLOT(faceResearch()));
+        connect(timerCamera, SIGNAL(timeout()), this, SLOT(objectResearch()));
+    }
+
+    timerCamera->setInterval(frameInterval);
+
+
     timerCamera->start();
     timerActive = true;
     startButton->hide();
@@ -284,23 +341,35 @@ void MainWindow::startTimer(){
 void MainWindow::stopTimer(){
     timerCamera->stop();
     timerActive = false;
-    timerCamera->deleteLater();
     stopButton->hide();
     startButton->show();
 }
 
 
+//SETTINGS
 void MainWindow::setting(){
     if(!settings){
         settingButton->setStyleSheet("QPushButton { background-color : grey; }");
-        sliderIntervalMin->show();
-        sliderIntervalMax->show();
-        sliderIntervalText->show();
-        sliderInterval->show();
-        sliderSensMin->show();
-        sliderSensMax->show();
-        sliderSensText->show();
-        sliderSens->show();
+        if(modeSelected == 0){
+            sliderIntervalMin->show();
+            sliderIntervalMax->show();
+            sliderIntervalText->show();
+            sliderInterval->show();
+            sliderSensMin->show();
+            sliderSensMax->show();
+            sliderSensText->show();
+            sliderSens->show();
+        }
+        if(modeSelected == 1){
+            objectToDetect->show();
+            objectToDetectText->show();
+            sliderSensMin->show();
+            sliderSensMax->show();
+            sliderSensText->show();
+            sliderSens->show();
+            countMode->show();
+            countModeText->show();
+        }
         settings = true;
     }
     else{
@@ -313,8 +382,23 @@ void MainWindow::setting(){
         sliderSensMax->hide();
         sliderSensText->hide();
         sliderSens->hide();
+        objectToDetect->hide();
+        objectToDetectText->hide();
+        countMode->hide();
+        countModeText->hide();
         settings = false;
     }
+}
+
+void MainWindow::sensi(int sensi){
+    sensivity = sensi;
+}
+
+void MainWindow::timeBetweenImage(int nb){
+    frameInterval = nb;
+    timerCamera->stop();
+    timerCamera->setInterval(frameInterval);
+    timerCamera->start();
 }
 
 void MainWindow::hideImage(){
@@ -331,25 +415,14 @@ void MainWindow::hideImage(){
 }
 
 
+//RESEARCH
 void MainWindow::faceResearch(){
     Mat image300;
     if (!photo)
         cap.read(image);
 
     if(resizeWindow){
-        int width = image.cols *1.34;
-        int height = image.rows*1.325;
-
-        QSize size = qApp->screens()[0]->size();
-
-        if(width>size.width())
-            width = size.width();
-
-        if(height>size.height())
-                height = size.height();
-
-        this->resize(width,height);
-        resizeWindow = false;
+        resizeWindows();
     }
 
     //INIT ELDERBOX
@@ -507,36 +580,23 @@ void MainWindow::objectResearch(){
         cap.read(image);
 
     if(resizeWindow){
-        int width = image.cols *1.34;
-        int height = image.rows*1.325;
-
-        QSize size = qApp->screens()[0]->size();
-
-        if(width>size.width())
-            width = size.width();
-
-        if(height>size.height())
-                height = size.height();
-
-        this->resize(width,height);
-        resizeWindow = false;
+        resizeWindows();
     }
-
-    int inputWidth = 416;
-    int inputHeight = 416;
 
     int treatmentStarted = cv::getTickCount();
 
-    ifstream ifs(objectNamesFile.c_str());
-    while(getline(ifs, objectName))
-        objectClasses.push_back(objectName);
+    if(objectClasses.empty()){
+        ifstream ifs(objectNamesFile.c_str());
+        while(getline(ifs, objectName))
+            objectClasses.push_back(objectName);
+    }
 
-    cv::Mat blob;
-    cv::dnn::blobFromImage(image, blob, 1 / 255.0, cv::Size(inputWidth, inputHeight), cv::Scalar(0, 0, 0), true, false);
+    //BLOB 416
+    cv::Mat blob416;
+    cv::dnn::blobFromImage(image, blob416, 1 / 255.0, cv::Size(416, 416), cv::Scalar(0, 0, 0), true, false);
+    objectNet.setInput(blob416);
 
-    objectNet.setInput(blob);
-
-    // forward
+    //FORWARD NET
     static vector<string> names;
     vector<int> outLayers = objectNet.getUnconnectedOutLayers();
     vector<string> layersNames = objectNet.getLayerNames();
@@ -548,13 +608,9 @@ void MainWindow::objectResearch(){
     vector<cv::Mat> outs;
     objectNet.forward(outs, names);
 
-    // remove the bounding boxes with low confidence
-    vector<int> outClassIds;
-    vector<float> outConfidences;
-    vector<cv::Rect> outBoxes;
 
-    float confThreshold = 0.5; // confidence threshold
-    float nmsThreshold = 0.4;  // non-maximum suppression threshold
+    //START DETECTION
+    float confThreshold = 0.5;
 
     vector<int> classIds;
     vector<float> confidences;
@@ -567,7 +623,7 @@ void MainWindow::objectResearch(){
             cv::Mat scores = outs[i].row(j).colRange(5, outs[i].cols);
             cv::Point classIdPoint;
             double confidence;
-            // get the value and location of the maximum score
+            //SEARCHING THE VALUE AND POS OF HIGHER SCORE
             cv::minMaxLoc(scores, 0, &confidence, 0, &classIdPoint);
             if (confidence > confThreshold)
             {
@@ -585,30 +641,16 @@ void MainWindow::objectResearch(){
         }
     }
 
-    // non maximum suppression
-    vector<int> indices;
-    cv::dnn::NMSBoxes(boxes, confidences, confThreshold, nmsThreshold, indices);
-    for (size_t i = 0; i < indices.size(); ++i) {
-        int idx = indices[i];
-        outClassIds.push_back(classIds[idx]);
-        outBoxes.push_back(boxes[idx]);
-        outConfidences.push_back(confidences[idx]);
-    }
+    vector<int> outClassIds;
+    vector<float> outConfidences;
+    vector<cv::Rect> outBoxes;
 
-    for(size_t i = 0; i < outClassIds.size(); i ++) {
-        cv::rectangle(image, outBoxes[i], cv::Scalar(0, 0, 255));
+    //NMS : NON MAXIMUM SUPPRESSION
+    NMS(&outClassIds, &outBoxes, &outConfidences, classIds, confidences, boxes);
 
-        // get the label for the class name and its confidence
-        string label = objectClasses[outClassIds[i]];
-        label += cv::format(":%.2f", outConfidences[i]);
+    //DRAW RECT AND PUT LABEL WITH CHOSEN OBJECT
+    rectAndLabelObject(outClassIds, objectClasses, outBoxes, outConfidences);
 
-        // display the label at the top of the bounding box
-        int baseLine;
-        cv::Size labelSize = cv::getTextSize(label, cv::FONT_HERSHEY_SIMPLEX, 0.5, 1, &baseLine);
-        int left = outBoxes[i].x, top = outBoxes[i].y;
-        top = max(top, labelSize.height);
-        cv::putText(image, label, cv::Point(left, top), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(255,255,255));
-    }
     int treatmentEnded = cv::getTickCount();
     double treatmentTime = (treatmentEnded-treatmentStarted) /cv::getTickFrequency();
     treatmentText = "Temps de traitement : " + to_string(treatmentTime) + " s";
@@ -617,21 +659,114 @@ void MainWindow::objectResearch(){
     emit newFrame(&image);
 }
 
-
-void MainWindow::sensi(int sensi){
-    sensivity = sensi;
+void MainWindow::NMS(vector<int> *outClassIds, vector<cv::Rect> *outBoxes, vector<float> *outConfidences, vector<int> classIds, vector<float> confidences, vector<Rect> boxes){
+    vector<int> indices;
+    float confThreshold = 0.5; // confidence threshold
+    float nmsThreshold = 0.4;  // non-maximum suppression threshold
+    cv::dnn::NMSBoxes(boxes, confidences, confThreshold, nmsThreshold, indices);
+    for (size_t i = 0; i < indices.size(); ++i) {
+        int idx = indices[i];
+        (*outClassIds).push_back(classIds[idx]);
+        (*outBoxes).push_back(boxes[idx]);
+        (*outConfidences).push_back(confidences[idx]);
+    }
 }
 
-void MainWindow::timeBetweenImage(int nb){
-    frameInterval = nb;
-    timerCamera->stop();
-    timerCamera->deleteLater();
-    startTimer();
+void MainWindow::rectAndLabelObject(vector<int> outClassIds, vector<std::string> objectClasses, vector<cv::Rect> outBoxes, vector<float> outConfidences){
+    for(size_t i = 0; i < outClassIds.size(); i ++) {
+        string label = objectClasses[outClassIds[i]];
+        string choice = selectObject();
+
+        if(choice == "all" || choice == label){
+            //DRAW BOX
+            cv::rectangle(image, outBoxes[i], cv::Scalar(0, 0, 255));
+
+            //GET NAME AND CONFIDENCE
+            label += cv::format(":%.2f", outConfidences[i]);
+
+            //DISPLAY LABEL ON BOX
+            int baseLine;
+            cv::Size labelSize = cv::getTextSize(label, cv::FONT_HERSHEY_SIMPLEX, 0.5, 1, &baseLine);
+            int left = outBoxes[i].x, top = outBoxes[i].y;
+            top = max(top, labelSize.height);
+            cv::putText(image, label, cv::Point(left, top), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(255,255,255));
+
+            if(countMode->isChecked())
+                checkCountMode();
+            if(comptage)
+                objectCounter(outBoxes[i]);
+        }
+    }
 }
 
+string MainWindow::selectObject(){
+    string choice;
+    if (objectToDetect->isChecked())
+        choice = "person";
+    else
+        choice = "all";
 
+    return choice;
+}
+
+void MainWindow::objectCounter(cv::Rect objectBox){
+    newBox = 1;//0 = box connue ; 1 = nouvelle box ; 2 = box proche d'un bord
+
+    for(unsigned long b = 0; b < tempObjectBox.size(); b++){
+        vector<Rect> temp = tempObjectBox;
+        temp.clear();
+
+        newBox = 1;
+        int centerX = objectBox.x + objectBox.width/2;
+        int centerY = objectBox.y + objectBox.height/2;
+
+        int centerXTest = tempObjectBox[b].x + tempObjectBox[b].width/2;
+        int centerYTest = tempObjectBox[b].y + tempObjectBox[b].height/2;
+
+        if((centerX >= centerXTest - 20 && centerX <= centerXTest + 20)
+                && (centerY >= centerYTest - 20 && centerY <= centerYTest + 20)
+                && centerYTest >20 && centerXTest >20){
+            tempObjectBox[b] = objectBox;
+            newBox = 0;
+            qDebug()<<"déplacement box" << tempObjectBox[b].x + tempObjectBox[b].width/2 << tempObjectBox[b].y + tempObjectBox[b].height/2 <<tempObjectBox[b].width<<tempObjectBox[b].height;
+        }
+
+        if((centerX < 150 || centerX > image.cols-150)
+                && tempObjectBox[b].x != -100
+                && newBox == 0){
+            if(centerX < 150 ){
+                qDebug()<<"compteur ++" << tempObjectBox[b].x + tempObjectBox[b].width/2 << tempObjectBox[b].y + tempObjectBox[b].height/2 <<tempObjectBox[b].width<<tempObjectBox[b].height;
+                compteur++;
+            }
+            if(centerX > image.cols-150){
+                qDebug()<<"compteur --" << tempObjectBox[b].x + tempObjectBox[b].width/2 << tempObjectBox[b].y + tempObjectBox[b].height/2 <<tempObjectBox[b].width<<tempObjectBox[b].height;
+                compteur--;
+            }
+
+            uploadCounter();
+            tempObjectBox[b] = {-100,-100,1,1};
+        }
+
+
+        for(unsigned long d = 0; d <tempObjectBox.size(); d++){
+            int j = 0;
+            if(!tempObjectBox.empty() && tempObjectBox[d].x !=-100){
+                temp[j] = tempObjectBox[d];
+                j++;
+            }
+        }
+        if(!temp.empty() && temp[0].x == -100)
+            temp.clear();
+
+        tempObjectBox = temp;
+    }
+
+    if(newBox == 1 && (objectBox.x + objectBox.width/2 > 100 && objectBox.x + objectBox.width/2 < image.cols-100))
+        tempObjectBox.push_back(objectBox);
+}
+
+//UPLOAD
 void MainWindow::uploadListLabel(){
-    labelText = new QLabel(this);
     labelText->setStyleSheet("QLabel { background-color : white; }");
     string temp1;
     for(unsigned long m = 0; m<labels.size(); m++){
@@ -643,7 +778,6 @@ void MainWindow::uploadListLabel(){
 }
 
 void MainWindow::uploadTimeLabel(){
-    labelTime = new QLabel(this);
     labelTime->setStyleSheet("QLabel { background-color : white; }");
     labelTime->setText(QString::fromStdString(treatmentText));
     text_layout->addWidget(labelTime, 1, 0 , 1, 6);
@@ -675,3 +809,27 @@ void MainWindow::uploadImage(Mat *mat){
         return;
 }
 
+void MainWindow::uploadCounter(){
+    labelText->setStyleSheet("QLabel { background-color : white; }");
+    string personNumber = to_string(compteur);
+
+    labelText->setText(QString::fromStdString("Nombre de personnes : " + personNumber));
+    text_layout->addWidget(labelText, 0, 0 , 1, 6);
+}
+
+//RESIZE
+void MainWindow::resizeWindows(){
+    int width = image.cols *1.34;
+    int height = image.rows*1.325;
+
+    QSize size = qApp->screens()[0]->size();
+
+    if(width>size.width())
+        width = size.width();
+
+    if(height>size.height())
+            height = size.height();
+
+    this->resize(width,height);
+    resizeWindow = false;
+}

@@ -22,8 +22,8 @@ QT_BEGIN_MOC_NAMESPACE
 QT_WARNING_PUSH
 QT_WARNING_DISABLE_DEPRECATED
 struct qt_meta_stringdata_MainWindow_t {
-    QByteArrayData data[35];
-    char stringdata0[369];
+    QByteArrayData data[57];
+    char stringdata0[654];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -44,42 +44,71 @@ QT_MOC_LITERAL(8, 70, 11), // "uploadImage"
 QT_MOC_LITERAL(9, 82, 12), // "faceResearch"
 QT_MOC_LITERAL(10, 95, 10), // "startTimer"
 QT_MOC_LITERAL(11, 106, 9), // "stopTimer"
-QT_MOC_LITERAL(12, 116, 5), // "media"
-QT_MOC_LITERAL(13, 122, 5), // "sensi"
-QT_MOC_LITERAL(14, 128, 15), // "uploadTimeLabel"
-QT_MOC_LITERAL(15, 144, 15), // "uploadListLabel"
-QT_MOC_LITERAL(16, 160, 16), // "timeBetweenImage"
-QT_MOC_LITERAL(17, 177, 14), // "imageTreatment"
-QT_MOC_LITERAL(18, 192, 11), // "vector<int>"
-QT_MOC_LITERAL(19, 204, 9), // "actualBox"
-QT_MOC_LITERAL(20, 214, 7), // "cv::Mat"
-QT_MOC_LITERAL(21, 222, 5), // "image"
-QT_MOC_LITERAL(22, 228, 6), // "initUI"
-QT_MOC_LITERAL(23, 235, 9), // "openPhoto"
-QT_MOC_LITERAL(24, 245, 9), // "openVideo"
-QT_MOC_LITERAL(25, 255, 8), // "openCam0"
-QT_MOC_LITERAL(26, 264, 8), // "openCam1"
-QT_MOC_LITERAL(27, 273, 8), // "openCam2"
-QT_MOC_LITERAL(28, 282, 7), // "setting"
-QT_MOC_LITERAL(29, 290, 9), // "hideImage"
-QT_MOC_LITERAL(30, 300, 10), // "selectMode"
-QT_MOC_LITERAL(31, 311, 12), // "setModeObjet"
-QT_MOC_LITERAL(32, 324, 13), // "setModeVisage"
-QT_MOC_LITERAL(33, 338, 15), // "setModeComptage"
-QT_MOC_LITERAL(34, 354, 14) // "objectResearch"
+QT_MOC_LITERAL(12, 116, 11), // "selectMedia"
+QT_MOC_LITERAL(13, 128, 5), // "sensi"
+QT_MOC_LITERAL(14, 134, 15), // "uploadTimeLabel"
+QT_MOC_LITERAL(15, 150, 15), // "uploadListLabel"
+QT_MOC_LITERAL(16, 166, 16), // "timeBetweenImage"
+QT_MOC_LITERAL(17, 183, 14), // "imageTreatment"
+QT_MOC_LITERAL(18, 198, 11), // "vector<int>"
+QT_MOC_LITERAL(19, 210, 9), // "actualBox"
+QT_MOC_LITERAL(20, 220, 7), // "cv::Mat"
+QT_MOC_LITERAL(21, 228, 5), // "image"
+QT_MOC_LITERAL(22, 234, 6), // "initUI"
+QT_MOC_LITERAL(23, 241, 9), // "openPhoto"
+QT_MOC_LITERAL(24, 251, 9), // "openVideo"
+QT_MOC_LITERAL(25, 261, 8), // "openCam0"
+QT_MOC_LITERAL(26, 270, 8), // "openCam1"
+QT_MOC_LITERAL(27, 279, 8), // "openCam2"
+QT_MOC_LITERAL(28, 288, 7), // "setting"
+QT_MOC_LITERAL(29, 296, 9), // "hideImage"
+QT_MOC_LITERAL(30, 306, 10), // "selectMode"
+QT_MOC_LITERAL(31, 317, 13), // "setObjectMode"
+QT_MOC_LITERAL(32, 331, 11), // "setFaceMode"
+QT_MOC_LITERAL(33, 343, 14), // "checkCountMode"
+QT_MOC_LITERAL(34, 358, 14), // "objectResearch"
+QT_MOC_LITERAL(35, 373, 13), // "resizeWindows"
+QT_MOC_LITERAL(36, 387, 12), // "selectObject"
+QT_MOC_LITERAL(37, 400, 11), // "std::string"
+QT_MOC_LITERAL(38, 412, 3), // "NMS"
+QT_MOC_LITERAL(39, 416, 12), // "vector<int>*"
+QT_MOC_LITERAL(40, 429, 11), // "outClassIds"
+QT_MOC_LITERAL(41, 441, 17), // "vector<cv::Rect>*"
+QT_MOC_LITERAL(42, 459, 8), // "outBoxes"
+QT_MOC_LITERAL(43, 468, 14), // "vector<float>*"
+QT_MOC_LITERAL(44, 483, 14), // "outConfidences"
+QT_MOC_LITERAL(45, 498, 8), // "classIds"
+QT_MOC_LITERAL(46, 507, 13), // "vector<float>"
+QT_MOC_LITERAL(47, 521, 11), // "confidences"
+QT_MOC_LITERAL(48, 533, 16), // "vector<cv::Rect>"
+QT_MOC_LITERAL(49, 550, 3), // "box"
+QT_MOC_LITERAL(50, 554, 18), // "rectAndLabelObject"
+QT_MOC_LITERAL(51, 573, 19), // "vector<std::string>"
+QT_MOC_LITERAL(52, 593, 13), // "objectClasses"
+QT_MOC_LITERAL(53, 607, 13), // "objectCounter"
+QT_MOC_LITERAL(54, 621, 8), // "cv::Rect"
+QT_MOC_LITERAL(55, 630, 9), // "objectBox"
+QT_MOC_LITERAL(56, 640, 13) // "uploadCounter"
 
     },
     "MainWindow\0newFrame\0\0cv::Mat*\0data\0"
     "newLabel\0elapsedTime\0mediaSelected\0"
     "uploadImage\0faceResearch\0startTimer\0"
-    "stopTimer\0media\0sensi\0uploadTimeLabel\0"
+    "stopTimer\0selectMedia\0sensi\0uploadTimeLabel\0"
     "uploadListLabel\0timeBetweenImage\0"
     "imageTreatment\0vector<int>\0actualBox\0"
     "cv::Mat\0image\0initUI\0openPhoto\0openVideo\0"
     "openCam0\0openCam1\0openCam2\0setting\0"
-    "hideImage\0selectMode\0setModeObjet\0"
-    "setModeVisage\0setModeComptage\0"
-    "objectResearch"
+    "hideImage\0selectMode\0setObjectMode\0"
+    "setFaceMode\0checkCountMode\0objectResearch\0"
+    "resizeWindows\0selectObject\0std::string\0"
+    "NMS\0vector<int>*\0outClassIds\0"
+    "vector<cv::Rect>*\0outBoxes\0vector<float>*\0"
+    "outConfidences\0classIds\0vector<float>\0"
+    "confidences\0vector<cv::Rect>\0box\0"
+    "rectAndLabelObject\0vector<std::string>\0"
+    "objectClasses\0objectCounter\0cv::Rect\0"
+    "objectBox\0uploadCounter"
 };
 #undef QT_MOC_LITERAL
 
@@ -89,7 +118,7 @@ static const uint qt_meta_data_MainWindow[] = {
        8,       // revision
        0,       // classname
        0,    0, // classinfo
-      27,   14, // methods
+      33,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -97,35 +126,41 @@ static const uint qt_meta_data_MainWindow[] = {
        4,       // signalCount
 
  // signals: name, argc, parameters, tag, flags
-       1,    1,  149,    2, 0x06 /* Public */,
-       5,    0,  152,    2, 0x06 /* Public */,
-       6,    0,  153,    2, 0x06 /* Public */,
-       7,    1,  154,    2, 0x06 /* Public */,
+       1,    1,  179,    2, 0x06 /* Public */,
+       5,    0,  182,    2, 0x06 /* Public */,
+       6,    0,  183,    2, 0x06 /* Public */,
+       7,    1,  184,    2, 0x06 /* Public */,
 
  // slots: name, argc, parameters, tag, flags
-       8,    1,  157,    2, 0x08 /* Private */,
-       9,    0,  160,    2, 0x08 /* Private */,
-      10,    0,  161,    2, 0x08 /* Private */,
-      11,    0,  162,    2, 0x08 /* Private */,
-      12,    0,  163,    2, 0x08 /* Private */,
-      13,    1,  164,    2, 0x08 /* Private */,
-      14,    0,  167,    2, 0x08 /* Private */,
-      15,    0,  168,    2, 0x08 /* Private */,
-      16,    1,  169,    2, 0x08 /* Private */,
-      17,    2,  172,    2, 0x08 /* Private */,
-      22,    0,  177,    2, 0x08 /* Private */,
-      23,    0,  178,    2, 0x08 /* Private */,
-      24,    0,  179,    2, 0x08 /* Private */,
-      25,    0,  180,    2, 0x08 /* Private */,
-      26,    0,  181,    2, 0x08 /* Private */,
-      27,    0,  182,    2, 0x08 /* Private */,
-      28,    0,  183,    2, 0x08 /* Private */,
-      29,    0,  184,    2, 0x08 /* Private */,
-      30,    0,  185,    2, 0x08 /* Private */,
-      31,    0,  186,    2, 0x08 /* Private */,
-      32,    0,  187,    2, 0x08 /* Private */,
-      33,    0,  188,    2, 0x08 /* Private */,
-      34,    0,  189,    2, 0x08 /* Private */,
+       8,    1,  187,    2, 0x08 /* Private */,
+       9,    0,  190,    2, 0x08 /* Private */,
+      10,    0,  191,    2, 0x08 /* Private */,
+      11,    0,  192,    2, 0x08 /* Private */,
+      12,    0,  193,    2, 0x08 /* Private */,
+      13,    1,  194,    2, 0x08 /* Private */,
+      14,    0,  197,    2, 0x08 /* Private */,
+      15,    0,  198,    2, 0x08 /* Private */,
+      16,    1,  199,    2, 0x08 /* Private */,
+      17,    2,  202,    2, 0x08 /* Private */,
+      22,    0,  207,    2, 0x08 /* Private */,
+      23,    0,  208,    2, 0x08 /* Private */,
+      24,    0,  209,    2, 0x08 /* Private */,
+      25,    0,  210,    2, 0x08 /* Private */,
+      26,    0,  211,    2, 0x08 /* Private */,
+      27,    0,  212,    2, 0x08 /* Private */,
+      28,    0,  213,    2, 0x08 /* Private */,
+      29,    0,  214,    2, 0x08 /* Private */,
+      30,    0,  215,    2, 0x08 /* Private */,
+      31,    0,  216,    2, 0x08 /* Private */,
+      32,    0,  217,    2, 0x08 /* Private */,
+      33,    0,  218,    2, 0x08 /* Private */,
+      34,    0,  219,    2, 0x08 /* Private */,
+      35,    0,  220,    2, 0x08 /* Private */,
+      36,    0,  221,    2, 0x08 /* Private */,
+      38,    6,  222,    2, 0x08 /* Private */,
+      50,    4,  235,    2, 0x08 /* Private */,
+      53,    1,  244,    2, 0x08 /* Private */,
+      56,    0,  247,    2, 0x08 /* Private */,
 
  // signals: parameters
     QMetaType::Void, 0x80000000 | 3,    4,
@@ -157,6 +192,12 @@ static const uint qt_meta_data_MainWindow[] = {
     QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void,
+    QMetaType::Void,
+    0x80000000 | 37,
+    QMetaType::Void, 0x80000000 | 39, 0x80000000 | 41, 0x80000000 | 43, 0x80000000 | 18, 0x80000000 | 46, 0x80000000 | 48,   40,   42,   44,   45,   47,   49,
+    QMetaType::Void, 0x80000000 | 18, 0x80000000 | 51, 0x80000000 | 48, 0x80000000 | 46,   40,   52,   42,   44,
+    QMetaType::Void, 0x80000000 | 54,   55,
+    QMetaType::Void,
 
        0        // eod
 };
@@ -175,7 +216,7 @@ void MainWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, 
         case 5: _t->faceResearch(); break;
         case 6: _t->startTimer(); break;
         case 7: _t->stopTimer(); break;
-        case 8: _t->media(); break;
+        case 8: _t->selectMedia(); break;
         case 9: _t->sensi((*reinterpret_cast< int(*)>(_a[1]))); break;
         case 10: _t->uploadTimeLabel(); break;
         case 11: _t->uploadListLabel(); break;
@@ -190,10 +231,17 @@ void MainWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, 
         case 20: _t->setting(); break;
         case 21: _t->hideImage(); break;
         case 22: _t->selectMode(); break;
-        case 23: _t->setModeObjet(); break;
-        case 24: _t->setModeVisage(); break;
-        case 25: _t->setModeComptage(); break;
+        case 23: _t->setObjectMode(); break;
+        case 24: _t->setFaceMode(); break;
+        case 25: _t->checkCountMode(); break;
         case 26: _t->objectResearch(); break;
+        case 27: _t->resizeWindows(); break;
+        case 28: { std::string _r = _t->selectObject();
+            if (_a[0]) *reinterpret_cast< std::string*>(_a[0]) = std::move(_r); }  break;
+        case 29: _t->NMS((*reinterpret_cast< vector<int>*(*)>(_a[1])),(*reinterpret_cast< vector<cv::Rect>*(*)>(_a[2])),(*reinterpret_cast< vector<float>*(*)>(_a[3])),(*reinterpret_cast< vector<int>(*)>(_a[4])),(*reinterpret_cast< vector<float>(*)>(_a[5])),(*reinterpret_cast< vector<cv::Rect>(*)>(_a[6]))); break;
+        case 30: _t->rectAndLabelObject((*reinterpret_cast< vector<int>(*)>(_a[1])),(*reinterpret_cast< vector<std::string>(*)>(_a[2])),(*reinterpret_cast< vector<cv::Rect>(*)>(_a[3])),(*reinterpret_cast< vector<float>(*)>(_a[4]))); break;
+        case 31: _t->objectCounter((*reinterpret_cast< cv::Rect(*)>(_a[1]))); break;
+        case 32: _t->uploadCounter(); break;
         default: ;
         }
     } else if (_c == QMetaObject::IndexOfMethod) {
@@ -258,13 +306,13 @@ int MainWindow::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 27)
+        if (_id < 33)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 27;
+        _id -= 33;
     } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 27)
+        if (_id < 33)
             *reinterpret_cast<int*>(_a[0]) = -1;
-        _id -= 27;
+        _id -= 33;
     }
     return _id;
 }

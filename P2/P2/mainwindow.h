@@ -56,7 +56,7 @@ private slots:
     void faceResearch();
     void startTimer();
     void stopTimer();
-    void media();
+    void selectMedia();
     void sensi(int);
     void uploadTimeLabel();
     void uploadListLabel();
@@ -71,23 +71,32 @@ private slots:
     void setting();
     void hideImage();
     void selectMode();
-    void setModeObjet();
-    void setModeVisage();
-    void setModeComptage();
+    void setObjectMode();
+    void setFaceMode();
+    void checkCountMode();
     void objectResearch();
+    void resizeWindows();
+    std::string selectObject();
+    void NMS(vector<int> *outClassIds, vector<cv::Rect> *outBoxes, vector<float> *outConfidences, vector<int> classIds, vector<float> confidences, vector<cv::Rect> box);
+    void rectAndLabelObject(vector<int> outClassIds, vector<std::string> objectClasses, vector<cv::Rect> outBoxes, vector<float> outConfidences);
+    void objectCounter(cv::Rect objectBox);
+    void uploadCounter();
 
 
 private :
     bool debugActif = false;
     bool settings = false;
     bool photo = false;
-    bool newBox = true;
     bool resizeWindow = true;
     bool imageHided = false;
     bool timerActive = false;
     bool comptage = false;
+    bool modeMenuSet = false;
+    bool mediaMenuSet = false;
+    bool personOnly = false;
 
     vector<string> labels;
+    vector<string> objectClasses;
 
     string profil;
     string treatmentText;
@@ -98,10 +107,13 @@ private :
     int sensivity = 50;
     int frameInterval = 50;
     int modeSelected = -1;
+    int compteur = 0;
+    int newBox = 1;
 
     vector<Mat> facesFrame;
     vector<vector<int>> elderBoxOfBox;
-    vector<string> objectClasses;
+
+    vector<Rect> tempObjectBox;
 
     VideoCapture cap;
 
@@ -110,6 +122,9 @@ private :
 
     QGraphicsScene *imageScene;
     QGraphicsView *imageView;
+
+    QCheckBox *objectToDetect;
+    QCheckBox *countMode;
 
     QPushButton *startButton;
     QPushButton *stopButton;
@@ -130,6 +145,9 @@ private :
     QLabel *sliderIntervalMin;
     QLabel *labelText;
     QLabel *labelTime;
+    QLabel *objectToDetectText;
+    QLabel *countText;
+    QLabel *countModeText;
 
     QTimer *timerCamera;
 
@@ -137,7 +155,7 @@ private :
     QMenu *cameraMenu;
     QMenu *modeMenu;
     QAction *camera[5];
-    QAction *mode[3];
+    QAction *mode[2];
     QPoint *cursorPosition;
 
     // OBJECT DETECTION
