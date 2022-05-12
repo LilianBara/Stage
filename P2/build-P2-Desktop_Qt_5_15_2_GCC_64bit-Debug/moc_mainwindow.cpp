@@ -22,8 +22,8 @@ QT_BEGIN_MOC_NAMESPACE
 QT_WARNING_PUSH
 QT_WARNING_DISABLE_DEPRECATED
 struct qt_meta_stringdata_MainWindow_t {
-    QByteArrayData data[57];
-    char stringdata0[654];
+    QByteArrayData data[55];
+    char stringdata0[635];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -86,9 +86,7 @@ QT_MOC_LITERAL(50, 554, 18), // "rectAndLabelObject"
 QT_MOC_LITERAL(51, 573, 19), // "vector<std::string>"
 QT_MOC_LITERAL(52, 593, 13), // "objectClasses"
 QT_MOC_LITERAL(53, 607, 13), // "objectCounter"
-QT_MOC_LITERAL(54, 621, 8), // "cv::Rect"
-QT_MOC_LITERAL(55, 630, 9), // "objectBox"
-QT_MOC_LITERAL(56, 640, 13) // "uploadCounter"
+QT_MOC_LITERAL(54, 621, 13) // "uploadCounter"
 
     },
     "MainWindow\0newFrame\0\0cv::Mat*\0data\0"
@@ -107,8 +105,7 @@ QT_MOC_LITERAL(56, 640, 13) // "uploadCounter"
     "outConfidences\0classIds\0vector<float>\0"
     "confidences\0vector<cv::Rect>\0box\0"
     "rectAndLabelObject\0vector<std::string>\0"
-    "objectClasses\0objectCounter\0cv::Rect\0"
-    "objectBox\0uploadCounter"
+    "objectClasses\0objectCounter\0uploadCounter"
 };
 #undef QT_MOC_LITERAL
 
@@ -159,8 +156,8 @@ static const uint qt_meta_data_MainWindow[] = {
       36,    0,  221,    2, 0x08 /* Private */,
       38,    6,  222,    2, 0x08 /* Private */,
       50,    4,  235,    2, 0x08 /* Private */,
-      53,    1,  244,    2, 0x08 /* Private */,
-      56,    0,  247,    2, 0x08 /* Private */,
+      53,    0,  244,    2, 0x08 /* Private */,
+      54,    0,  245,    2, 0x08 /* Private */,
 
  // signals: parameters
     QMetaType::Void, 0x80000000 | 3,    4,
@@ -196,7 +193,7 @@ static const uint qt_meta_data_MainWindow[] = {
     0x80000000 | 37,
     QMetaType::Void, 0x80000000 | 39, 0x80000000 | 41, 0x80000000 | 43, 0x80000000 | 18, 0x80000000 | 46, 0x80000000 | 48,   40,   42,   44,   45,   47,   49,
     QMetaType::Void, 0x80000000 | 18, 0x80000000 | 51, 0x80000000 | 48, 0x80000000 | 46,   40,   52,   42,   44,
-    QMetaType::Void, 0x80000000 | 54,   55,
+    QMetaType::Void,
     QMetaType::Void,
 
        0        // eod
@@ -240,7 +237,7 @@ void MainWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, 
             if (_a[0]) *reinterpret_cast< std::string*>(_a[0]) = std::move(_r); }  break;
         case 29: _t->NMS((*reinterpret_cast< vector<int>*(*)>(_a[1])),(*reinterpret_cast< vector<cv::Rect>*(*)>(_a[2])),(*reinterpret_cast< vector<float>*(*)>(_a[3])),(*reinterpret_cast< vector<int>(*)>(_a[4])),(*reinterpret_cast< vector<float>(*)>(_a[5])),(*reinterpret_cast< vector<cv::Rect>(*)>(_a[6]))); break;
         case 30: _t->rectAndLabelObject((*reinterpret_cast< vector<int>(*)>(_a[1])),(*reinterpret_cast< vector<std::string>(*)>(_a[2])),(*reinterpret_cast< vector<cv::Rect>(*)>(_a[3])),(*reinterpret_cast< vector<float>(*)>(_a[4]))); break;
-        case 31: _t->objectCounter((*reinterpret_cast< cv::Rect(*)>(_a[1]))); break;
+        case 31: _t->objectCounter(); break;
         case 32: _t->uploadCounter(); break;
         default: ;
         }

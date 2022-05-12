@@ -79,7 +79,7 @@ private slots:
     std::string selectObject();
     void NMS(vector<int> *outClassIds, vector<cv::Rect> *outBoxes, vector<float> *outConfidences, vector<int> classIds, vector<float> confidences, vector<cv::Rect> box);
     void rectAndLabelObject(vector<int> outClassIds, vector<std::string> objectClasses, vector<cv::Rect> outBoxes, vector<float> outConfidences);
-    void objectCounter(cv::Rect objectBox);
+    void objectCounter();
     void uploadCounter();
 
 
@@ -109,10 +109,13 @@ private :
     int modeSelected = -1;
     int compteur = 0;
     int newBox = 1;
+    int elderNbGauche = 0;
+    int elderNbDroite = 0;
+    int vGauche = 0;
+    int vDroite = 0;
 
     vector<Mat> facesFrame;
     vector<vector<int>> elderBoxOfBox;
-
     vector<Rect> tempObjectBox;
 
     VideoCapture cap;

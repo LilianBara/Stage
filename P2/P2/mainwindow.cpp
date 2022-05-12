@@ -657,6 +657,7 @@ void MainWindow::objectResearch(){
 
     emit elapsedTime();
     emit newFrame(&image);
+    boxes.clear();
 }
 
 void MainWindow::NMS(vector<int> *outClassIds, vector<cv::Rect> *outBoxes, vector<float> *outConfidences, vector<int> classIds, vector<float> confidences, vector<Rect> boxes){
@@ -677,7 +678,12 @@ void MainWindow::rectAndLabelObject(vector<int> outClassIds, vector<std::string>
         string label = objectClasses[outClassIds[i]];
         string choice = selectObject();
 
-        if(choice == "all" || choice == label){
+//        if (choice == label && i == 0){
+//            tempObjectBox.push_back(outBoxes[i]);
+//            cv::rectangle(image, outBoxes[i], cv::Scalar(0, 0, 255));
+//        }
+
+        if(choice == label || choice == "all"){
             //DRAW BOX
             cv::rectangle(image, outBoxes[i], cv::Scalar(0, 0, 255));
 
@@ -690,13 +696,18 @@ void MainWindow::rectAndLabelObject(vector<int> outClassIds, vector<std::string>
             int left = outBoxes[i].x, top = outBoxes[i].y;
             top = max(top, labelSize.height);
             cv::putText(image, label, cv::Point(left, top), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(255,255,255));
-
-            if(countMode->isChecked())
-                checkCountMode();
-            if(comptage)
-                objectCounter(outBoxes[i]);
         }
+
+        if(countMode->isChecked())
+            checkCountMode();
+
+        if(comptage && outClassIds[i] == 0){
+            tempObjectBox.push_back(outBoxes[i]);
+        }
+
     }
+    if(comptage)
+        objectCounter();
 }
 
 string MainWindow::selectObject(){
@@ -709,60 +720,50 @@ string MainWindow::selectObject(){
     return choice;
 }
 
-void MainWindow::objectCounter(cv::Rect objectBox){
-    newBox = 1;//0 = box connue ; 1 = nouvelle box ; 2 = box proche d'un bord
+void MainWindow::objectCounter(){
+    //nbGauche & nbDroite nombre actuel de personnes de chaque côté
+    //elderNbGauche & elderNbDroite ancien nombre de chaque côté
+    //vGauche & vDroite nombre de personnes parties à valider
+    int nbGauche = 0;
+    int nbDroite = 0;
+    for(unsigned long i = 0; i < tempObjectBox.size(); i++){
+        int centerX = tempObjectBox[i].x + tempObjectBox[i].width/2;
+        if(centerX > image.cols/2)
+            nbDroite++;
+        else
+            nbGauche++;
+    }
+    string NBDroite, NBGauche;
+    NBDroite = to_string(nbDroite);
+    NBGauche = to_string(nbGauche);
+    cv::putText(image, NBGauche, cv::Point(0, 30), cv::FONT_HERSHEY_SIMPLEX, 1, cv::Scalar(0,255,0), 3);
+    cv::putText(image, NBDroite, cv::Point(image.cols-20, 30), cv::FONT_HERSHEY_SIMPLEX, 1, cv::Scalar(0,255,0), 3);
 
-    for(unsigned long b = 0; b < tempObjectBox.size(); b++){
-        vector<Rect> temp = tempObjectBox;
-        temp.clear();
-
-        newBox = 1;
-        int centerX = objectBox.x + objectBox.width/2;
-        int centerY = objectBox.y + objectBox.height/2;
-
-        int centerXTest = tempObjectBox[b].x + tempObjectBox[b].width/2;
-        int centerYTest = tempObjectBox[b].y + tempObjectBox[b].height/2;
-
-        if((centerX >= centerXTest - 20 && centerX <= centerXTest + 20)
-                && (centerY >= centerYTest - 20 && centerY <= centerYTest + 20)
-                && centerYTest >20 && centerXTest >20){
-            tempObjectBox[b] = objectBox;
-            newBox = 0;
-            qDebug()<<"déplacement box" << tempObjectBox[b].x + tempObjectBox[b].width/2 << tempObjectBox[b].y + tempObjectBox[b].height/2 <<tempObjectBox[b].width<<tempObjectBox[b].height;
-        }
-
-        if((centerX < 150 || centerX > image.cols-150)
-                && tempObjectBox[b].x != -100
-                && newBox == 0){
-            if(centerX < 150 ){
-                qDebug()<<"compteur ++" << tempObjectBox[b].x + tempObjectBox[b].width/2 << tempObjectBox[b].y + tempObjectBox[b].height/2 <<tempObjectBox[b].width<<tempObjectBox[b].height;
-                compteur++;
-            }
-            if(centerX > image.cols-150){
-                qDebug()<<"compteur --" << tempObjectBox[b].x + tempObjectBox[b].width/2 << tempObjectBox[b].y + tempObjectBox[b].height/2 <<tempObjectBox[b].width<<tempObjectBox[b].height;
-                compteur--;
-            }
-
-            uploadCounter();
-            tempObjectBox[b] = {-100,-100,1,1};
-        }
-
-
-        for(unsigned long d = 0; d <tempObjectBox.size(); d++){
-            int j = 0;
-            if(!tempObjectBox.empty() && tempObjectBox[d].x !=-100){
-                temp[j] = tempObjectBox[d];
-                j++;
-            }
-        }
-        if(!temp.empty() && temp[0].x == -100)
-            temp.clear();
-
-        tempObjectBox = temp;
+    if(nbDroite < elderNbDroite){
+        vDroite = elderNbDroite-nbDroite;
     }
 
-    if(newBox == 1 && (objectBox.x + objectBox.width/2 > 100 && objectBox.x + objectBox.width/2 < image.cols-100))
-        tempObjectBox.push_back(objectBox);
+    if(nbGauche < elderNbGauche){
+        vGauche = elderNbGauche-nbGauche;
+    }
+
+
+    while(nbDroite > elderNbDroite && vGauche >0){
+        vGauche--;
+        elderNbDroite++;
+        compteur++;
+    }
+
+    while(nbGauche > elderNbGauche && vDroite >0){
+        vDroite--;
+        elderNbGauche++;
+        compteur--;
+    }
+
+    uploadCounter();
+    elderNbDroite = nbDroite;
+    elderNbGauche = nbGauche;
+    tempObjectBox.clear();
 }
 
 //UPLOAD
